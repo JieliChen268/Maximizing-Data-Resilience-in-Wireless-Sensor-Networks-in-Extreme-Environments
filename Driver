@@ -1,0 +1,72 @@
+package GraduateProject1;
+
+
+public class Driver {
+
+	public static void main(String[] args) {
+		
+		GsensorNetwork sn = new GsensorNetwork();
+		
+		/* Output 1: Plot sensor network field, with all sensor nodes (including Dgs) */
+		sn.buildNetwork(); 
+		
+		
+		/* Output 2: To check whether the sensor network is connected */
+		sn.isConnected();
+		
+		/* Output 3: If it is connected, ask for input of two nodes u and v, output the energy
+		 *  consumption of sending a data from u to v using shortest path between them.
+		 * */
+		sn.engergyConsumptionCal();
+		
+		/*Output 4: For a pair of (N, Tr), output whether the generated sensor network is connected. 
+		 *Draw a plot to show the relationship between N min and Tr */
+		
+		/* (Tr, N) ->  (1,798)  */
+		//TrAndNrRelation r1 = new TrAndNrRelation (1,798);
+		
+		/* (Tr, N) ->  (2,201)  */
+		//TrAndNrRelation r2 = new TrAndNrRelation (2,201);
+		
+		/* (Tr, N) ->  (3,90)  */
+		//TrAndNrRelation r3 = new TrAndNrRelation (3,90);
+		
+		/* (Tr, N) ->  (4,51)  */
+		//TrAndNrRelation r4 = new TrAndNrRelation (4,51);
+		
+		/* (Tr, N) ->  (5,33) */
+		//TrAndNrRelation r5 = new TrAndNrRelation (5,33);
+		
+		/* (Tr, N) -> (6,24) */
+		//TrAndNrRelation r6 = new TrAndNrRelation (6,24);
+		
+		/* (Tr, N) -> (7,18) */
+		//TrAndNrRelation r7 = new TrAndNrRelation (7,18);
+		
+		/* (Tr, N) -> (8,14) */
+		//TrAndNrRelation r8 = new TrAndNrRelation (8,14);
+		
+		/* (Tr, N) -> (9,11) */
+		//TrAndNrRelation r9 = new TrAndNrRelation (9,11);
+		
+		/* (Tr, N) -> (10,9) */
+		//TrAndNrRelation r10 = new TrAndNrRelation (10,9);
+		
+		
+		
+		/*Output : The math equation of N min and Tr
+		 * when randomly generate node in the x y area, the number of nodes
+		 * in the circle of Tr should be 3.14 *Tr * Tr *(N-1)/x*y
+		 * In order to be connected, the number should be more than one
+		 * 
+		 * 3.14 *Tr * Tr *(N-1)/x*y >= 1
+		 *  so  N min = x*y/Tr * Tr *3.14 + 1 ;  
+		 *  
+		 *  x, y represent the area of sensor network
+		 *  
+		 *  
+		 *  */
+		/**/
+	}
+
+}
