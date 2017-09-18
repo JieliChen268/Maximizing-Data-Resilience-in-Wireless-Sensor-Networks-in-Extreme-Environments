@@ -1,0 +1,345 @@
+package GraduateProject1;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.Scanner;
+import java.util.Stack;
+
+public class GsensorNetwork {
+	
+	private int width_x;
+	private int length_y;
+	private SensorNode[] Node;
+	private int numOfNode;
+	private int numOfDG;
+	private int Tr;
+	private Scanner input;
+	private boolean[][] hasEdge;
+	private int initialEnergy;
+	private int storageCap;
+	private int numofDataItem;
+
+	
+	
+	
+	public GsensorNetwork () {
+		
+		input = new Scanner (System.in);
+		this.width_x  =  50;
+		this.length_y =  50;
+		
+		System.out.println("Enter  number of sensor nodes : ");
+	    this.numOfNode = input.nextInt();
+	    
+		this.Node = new SensorNode[numOfNode];
+	
+	    
+	    System.out.println("Enter  transmission range Tr of each sensor Node : ");
+ 	    this.Tr = input.nextInt();
+ 	   
+    	System.out.println("Enter  initialEnergy lower range of sensor node : ");
+		int a = input.nextInt();
+		System.out.println("Enter  initialEnergy upper range of sensor node : ");
+		int b = input.nextInt();
+		this.initialEnergy = (int) (Math.random() * (b - a) + a) + 1;
+		
+		System.out.println("Enter  storageCap m of sensor node : ");
+		this.storageCap = input.nextInt();
+  
+    	hasEdge = new boolean[numOfNode][numOfNode];
+    	
+    	 System.out.println("Enter number of DGs : ");
+	     this.numOfDG = input.nextInt();	
+	     
+	     System.out.println("Enter number of data item for each node : ");
+	     this.numofDataItem = input.nextInt();
+	     
+	}
+	
+	
+    public void buildNetwork (){
+    	
+    	createPlot();
+    	createNodes();
+    	createDG();
+    	
+    }
+
+        private void createPlot () {
+        	
+        	 System.out.println("Enter  width x : ");
+		     this.width_x = input.nextInt();
+		     System.out.println("Enter  length y : ");
+		     this.length_y = input.nextInt();
+		     System.out.println(width_x + " * " + length_y + " plot is created successfully! ");
+		     System.out.println();
+		     System.out.println();
+        }
+    
+        private void createNodes () {
+        	
+		     for (int i = 0; i < numOfNode; i++) {
+		    	 Node[i] = new SensorNode();
+		    	 Node[i].setxPosition(width_x);
+		    	 Node[i].setyPosition(length_y);
+		    	 System.out.println("Node" + Node[i].getID() + " is created successfully! ");
+		    	 System.out.println();
+		    	 System.out.println();
+		     }
+        }
+		  
+        private void createDG () {
+        	
+		     int[] index = generateindexList(numOfNode, numOfDG); // choose p out of n Nodes to be DG
+		  
+		   
+		     
+		     SensorNode[] DGList = new SensorNode[numOfDG];
+		     for (int i = 0; i < numOfDG; i++) {
+		    	 DGList[i] = Node[index[i]];
+		    	 DGList[i].setDG(true);
+		    	 DGList[i].setNumOfDataItem(numofDataItem);
+		     }
+		     System.out.println(numOfDG + "data generating sensors are created!");
+		     System.out.println();
+		  }
+		 
+		 
+		 /* function to randomly generate p numbers from 1 - n  */
+		  private int[] generateindexList (int n, int p) {
+			    Integer[] arr = new Integer[n];
+			    for (int i = 0; i < arr.length; i++) {
+			        arr[i] = i;
+			    }
+			     
+			    Collections.shuffle(Arrays.asList(arr));
+			    
+			    int[] a = new int[p];
+			    for(int i = 0; i < a.length; i++) {
+			    	a[i]=arr[i];
+			    }
+			    
+			    return a;
+		  } 
+		  
+		  
+	public void isConnected () {
+		        boolean[][] hasEdge = edage_matrix();
+		    	
+		    	/* BFS traverse from Node[0] */
+		    	Queue<SensorNode> q = new LinkedList<SensorNode> ();
+		    	boolean[] visited = new boolean[numOfNode];
+		    	SensorNode[] parent = new SensorNode[numOfNode];
+		    	
+		    	for ( int i = 0; i < numOfNode; i++) { 
+		    		visited[i] = false;
+		    	}
+		    	/*add the first Node in the queue, and mark it as visited */
+		    	q.add(Node[0]);
+		    	visited[0] = true;
+		    	parent[0] = null;
+		    	
+		    	int element = -1;   SensorNode n;
+		    	while ( !q.isEmpty()) {
+		    		
+		    		n = q.remove();
+		    		//get the index of node n
+		    		for (int index = 0; index < numOfNode; index++) {
+		    			 if (n == Node[index]) {
+		    			     element = index;
+		    			 }
+		    		}
+
+		    		for (int i = 0; i < numOfNode; i++ ) {
+		    			
+		    			if (hasEdge[element][i] == true && visited[i] == false) {
+		    				q.add(Node[i]);
+		    				visited[i] = true;
+		    				parent[i] = Node[element];
+		    			}	
+		    			
+		    			i++;
+		    		}
+		    	}
+		    	
+                for (int index = 0; index < numOfNode; index++) {
+                	
+                	if (visited[index] == false) {
+                		System.out.println("This sensor network is not connected!");
+                		System.out.println();
+                		return;
+                		
+                	}	
+		    	}
+                System.out.println("This sensor network is connected!");
+                System.out.println();   
+     }
+	
+	public boolean[][] edage_matrix() {
+		/* to create adjacency matrix */
+		boolean[][] hasEdge = new boolean[numOfNode][numOfNode];
+    	double distanceOfTwoNodes = 0; 
+    	double a = 0;
+    	for (int i = 0; i < Node.length; i++) {
+    		
+    		for (int j = 0; j < Node.length; j++) {
+    			if ( i != j) {
+    				a = (Node[i].getxPosition() - Node[j].getxPosition()) * (Node[i].getxPosition() - Node[j].getxPosition()) + 
+    						(Node[i].getyPosition() - Node[j].getyPosition()) * (Node[i].getyPosition() - Node[j].getyPosition());
+    				
+    				distanceOfTwoNodes = Math.pow(a, 0.5);
+    				
+    				if (distanceOfTwoNodes <= Tr) {
+    					 hasEdge[i][j] = true;
+    				}
+    				else {
+    					hasEdge[i][j] = false;
+    				}
+    			} else {
+    				hasEdge[i][j] = false;
+    			}
+    		}
+    	}/* to create adjacency matrix */
+    	return hasEdge;
+	}
+	    
+	     
+	
+	/* Output 3: If connected, ask for input of two nodes u and v, output the energy
+	 *  consumption of sending a data from u to v using shortest path between them.
+	 * */
+	
+    public void engergyConsumptionCal () {
+    	 
+    	/*Display all the Node ID for the user to choose two */
+    	System.out.println();
+    	System.out.println("-----------------Sensor Node List------------------------");
+    	for (int i = 0; i < numOfNode; i++) {
+    		System.out.println("Sensor Node " + (i+ 1) +"'s ID "+ ": " + Node[i].getID());
+    	}
+    	System.out.println();
+    	
+    	System.out.println("Input two nodes from the list!");
+    	System.out.println();
+    	System.out.println("Input Node u's ID: ");
+    	String u = input.next();
+    	System.out.println("Input Node v's ID: ");
+    	String v = input.next();
+    	
+    	int indexOfu = -1, indexOfv = -1;
+    
+      	while (indexOfu == -1) {
+    		for (int i = 0; i < numOfNode; i++) {
+    			//System.out.println(Node[i].getID());
+        		if (u.equals(Node[i].getID())) {
+        			indexOfu = i;
+        			break;
+        		}
+        		
+        	}
+      	}
+    	while (indexOfv == -1) {
+    		for (int i = 0; i < numOfNode; i++) {
+        		if (v.equals(Node[i].getID())) {
+        			indexOfv = i;
+        			break;
+        		}
+        		
+        	}
+      	}
+ /*Two Nodes are selected successfully. */
+
+    	/* BFS traverse from u to v by  */
+    	boolean[][] hasEdge = edage_matrix();
+    	Queue<SensorNode> q = new LinkedList<SensorNode> ();
+    	boolean[] visited = new boolean[numOfNode];
+    	SensorNode[] parent = new SensorNode[numOfNode];
+    	
+    	for ( int i = 0; i < numOfNode; i++) { 
+    		visited[i] = false;
+    	}
+    	
+    	q.add(Node[indexOfu]); // start from u
+    	visited[indexOfu] = true;
+    	parent[indexOfu] = null;
+    	
+    	int element = -1;   SensorNode n;
+    	while ( !q.isEmpty()) {
+    		
+    		n = q.remove();
+    		for (int index = 0; index < numOfNode; index++) {
+    			 if (n == Node[index]) {
+    			     element = index;
+    			 }
+    		}
+    		
+    		for (int i = 0; i < numOfNode; i++ ) {
+    			
+    			if (hasEdge[element][i] == true && visited[i] == false) {
+    				q.add(Node[i]);
+    				visited[i] = true;
+    				parent[i] = Node[element];
+    			}
+    		}
+    	}
+    	
+    	/*find the shortest path from u to v*/
+    	SensorNode t = null;
+    	q.add(Node[indexOfv]);
+    	int index = 0;
+    	while (t != Node[indexOfu] && index < numOfNode) {
+    		t = parent[indexOfv];
+    		q.add(t);
+    	}
+    	q.add(Node[indexOfu]);
+
+    	t = Node[indexOfv];
+    	ArrayList<Integer> al = new ArrayList<Integer> ();
+    	
+    	while (!q.isEmpty()) {
+    		t = q.remove();
+    		for (int i = 0; i < numOfNode; i++) {
+   			     if (t == Node[i]) {
+   				 al.add(i);  
+   			     }
+    	    }
+        }
+    	
+    	System.out.print("The shortest path from u to v : ");
+    	for (int i = 0; i < al.size(); i++) {
+    		System.out.print("Node" +al.get(i) + " ");
+    	}
+    	System.out.println();
+ 
+    	double l = 0;
+    	for (int i = 0; i < al.size()-1; i++) {
+    		l = edgeLengthCal(al.indexOf(i),al.indexOf(i + 1)) + l;
+    	}
+    	
+    	double E, Et,Er;
+    	Et = 100 * 0.000000001 * 400 + 100 * 0.000000000001 * 400 * l * l;
+    	Er = 100 * 0.000000001 * 400;
+    	E = Et + Er;
+    	
+    	System.out.println("Energy comsumption sending a data from Node u to Node v is: " + E + " J" );
+  
+      	}
+    
+    /*private function to calculate the distance between two nodes according to shortest path*/
+        private double edgeLengthCal(int m, int k) {
+    	    double EdgeLength = 0; 
+	        double a = 0;	
+	        a = (Node[m].getxPosition() - Node[k].getxPosition()) * (Node[m].getxPosition() - Node[k].getxPosition()) + 
+	    						(Node[m].getyPosition() - Node[k].getyPosition()) * (Node[m].getyPosition() - Node[k].getyPosition());
+	    				
+	        EdgeLength = Math.pow(a, 0.5);
+	    		
+    	  return EdgeLength;
+     }	 
+        
+  
+ 
+}
