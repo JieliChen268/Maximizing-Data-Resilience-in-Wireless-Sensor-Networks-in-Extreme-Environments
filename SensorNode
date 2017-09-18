@@ -1,0 +1,72 @@
+package GraduateProject1;
+import java.util.*;
+public class SensorNode {
+	private String ID;
+	private boolean isDG;
+	private int xPosition;
+	private int yPosition;
+	private int numOfDataItem;
+	
+ 
+
+ 
+    public SensorNode() {
+    	Scanner input = new Scanner(System.in);
+		System.out.println("Create ID for the new node : "); 
+	    this.ID = input.next();
+	    
+    	this.isDG = false;
+    	
+    	xPosition = (int) (Math.random() * 50) + 1;
+    	yPosition = (int) (Math.random() * 50) + 1;
+    	
+    	this.numOfDataItem = 0;
+    	}
+
+	public double getxPosition() {
+		return xPosition;
+	}
+
+	public void setxPosition(int x) {
+		this.xPosition = (int) (Math.random() * x) + 1;
+	}
+
+	public double getyPosition() {
+		return yPosition;
+	}
+
+	public void setyPosition(int y) {
+		this.yPosition = (int) (Math.random() * y) + 1;
+	}
+
+	public String getID() {
+		return ID;
+	}
+
+	public void setID(String iD) {
+		ID = iD;
+	}
+
+	public boolean isDG() {
+		return isDG;
+	}
+
+	public void setDG(boolean isDG) {
+		this.isDG = isDG;
+	}
+
+	public int getNumOfDataItem() {
+		return numOfDataItem;
+	}
+
+	public void setNumOfDataItem(int numOfDataItem) {
+		this.numOfDataItem = numOfDataItem;
+	}
+
+	@Override
+	public String toString() {
+		return "SensorNode [ID=" + ID + ", isDG=" + isDG + ", xPosition=" + xPosition + ", yPosition=" + yPosition
+				+ "]";
+	}
+   
+}
